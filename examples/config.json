@@ -1,0 +1,8 @@
+{
+  "url": "http://localhost:9200",
+  "user": "example_user",
+  "password": "example_password",
+  "index_name": "example_index",
+  "size": 10
+}
+
