@@ -64,7 +64,7 @@ OSearchTableView is a command-line tool written in Go for fetching and displayin
 
 ```bash
 Usage: ostableview [options]
-    General options:")
+    General options:
       -u,    --url              OpenSearch URL
       -U,    --user              OpenSearch user
       -p,    --password         OpenSearch password
