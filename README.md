@@ -16,7 +16,7 @@ OSearchTableView is a command-line tool written in Go for fetching and displayin
 
 - Fetch data from OpenSearch indices.
 - Display fetched data in rows and tables.
-- Support for pagination to fetch large datasets efficiently.
+- Uses concurrency through goroutines to fetch large datasets efficiently.
 - Configurable options including URL, user authentication, index name, and more.
 
 ## Installation
