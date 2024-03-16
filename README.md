@@ -77,10 +77,10 @@ Usage: ostableview [options]
 
 ```bash
 # locally hosted opensearch with 100 rows queried.
-./ostableview -u <http://localhost:9200> -U demo-user -p demo-password -i demo_index -s 100
+./ostableview -u http://localhost:9200 -U demo-user -p demo-password -i demo_index -s 100
 
 # print output to file called results.txt
-./ostableview -u <http://localhost:9200> -U demo-user -p demo-password -i demo_index -s 100 > results.txt
+./ostableview -u http://localhost:9200 -U demo-user -p demo-password -i demo_index -s 100 > results.txt
 
 # configuration file specified
 ./ostableview -c path/to/config.json
