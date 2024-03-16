@@ -62,15 +62,15 @@ OSearchTableView is a command-line tool written in Go for fetching and displayin
 
 ## Usage
 
-```bash
+```text
 Usage: ostableview [options]
     General options:
-      -u,    --url              OpenSearch URL
-      -U,    --user              OpenSearch user
-      -p,    --password         OpenSearch password
-      -i,    --index              Index name
-      -s,    --size          Size limit for the number of rows to fetch (Default is 10, Maximum is 10000)
-      -c,    --config          Config file path (replaces above arguments)
+      -u,    --url                  OpenSearch URL
+      -U,    --user                 OpenSearch user
+      -p,    --password             OpenSearch password
+      -i,    --index                Index name
+      -s,    --size                 Size limit for the number of rows to fetch (Default is 10, Maximum is 10000)
+      -c,    --config               Config file path (replaces above arguments)
 ```
 
 ## Examples
