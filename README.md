@@ -92,7 +92,7 @@ Example of config.json:
 {
   "url": "http://localhost:9200",
   "user": "demo-user",
-  "password": "demo-passwor",
+  "password": "demo-password",
   "index_name": "demo_index",
   "size": 100
 }
