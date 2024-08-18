@@ -20,4 +20,6 @@ go.work
 osviewtable
 *.txt
 config.json
+releases/
 build/
+release-build-go.sh
