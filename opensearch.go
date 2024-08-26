@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"crypto/tls"
+	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -69,9 +70,6 @@ func FetchData(config Config) {
 		headers = append(headers, field)
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader(headers)
-
 	var wg sync.WaitGroup
 	rowsChan := make(chan []string, len(hits))
 
@@ -97,9 +95,34 @@ func FetchData(config Config) {
 		close(rowsChan)
 	}()
 
-	for row := range rowsChan {
-		table.Append(row)
-	}
+	if config.CSVFile != "" {
+		file, err := os.Create(config.CSVFile)
+		if err != nil {
+			fmt.Printf("Error creating CSV file: %s\n", err)
+			return
+		}
+		defer file.Close()
 
-	table.Render()
+		writer := csv.NewWriter(file)
+		defer writer.Flush()
+
+		// Write headers to the CSV file
+		writer.Write(headers)
+
+		// Write rows to the CSV file
+		for row := range rowsChan {
+			writer.Write(row)
+		}
+
+		fmt.Printf("Data successfully written to %s\n", config.CSVFile)
+	} else {
+		table := tablewriter.NewWriter(os.Stdout)
+		table.SetHeader(headers)
+
+		for row := range rowsChan {
+			table.Append(row)
+		}
+
+		table.Render()
+	}
 }

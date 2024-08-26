@@ -17,7 +17,7 @@
 # Go workspace file
 go.work
 
-osviewtable
+ostableview
 *.txt
 config.json
 releases/

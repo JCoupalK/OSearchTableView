@@ -13,6 +13,7 @@ type Config struct {
 	Password  string `json:"password"`
 	IndexName string `json:"index_name"`
 	Size      int    `json:"size"`
+	CSVFile   string `json:"csv_file"`
 }
 
 func main() {
@@ -30,6 +31,8 @@ func main() {
 		sizeShort     = flag.Int("s", 10, "Size limit for the number of documents to fetch (short form: -s)")
 		configFile    = flag.String("config", "", "Config file path (short form: -c)")
 		configShort   = flag.String("c", "", "Config file path (short form of -config)")
+		csvFile       = flag.String("csv", "", "CSV output file (short form: -o)")
+		csvShort      = flag.String("o", "", "CSV output file (short form of -csv)")
 	)
 	// Override the default flag.Usage
 	flag.Usage = Usage
@@ -55,6 +58,9 @@ func main() {
 	if *configFile == "" {
 		configFile = configShort
 	}
+	if *csvFile == "" {
+		csvFile = csvShort
+	}
 
 	// Load config from file if provided
 	var config Config
@@ -76,6 +82,7 @@ func main() {
 			Password:  *password,
 			IndexName: *indexName,
 			Size:      *size,
+			CSVFile:   *csvFile,
 		}
 	}
 
@@ -86,7 +93,7 @@ func main() {
 	}
 
 	if config.Size > 10000 {
-		fmt.Println("\nMaximum size is 10000 by OpenSearch limitations.")
+		fmt.Println("\nMaximum size is 10000 by OpenSearch API limitations.")
 		return
 	}
 
