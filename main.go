@@ -8,31 +8,34 @@ import (
 )
 
 type Config struct {
-	URL       string `json:"url"`
-	User      string `json:"user"`
-	Password  string `json:"password"`
-	IndexName string `json:"index_name"`
-	Size      int    `json:"size"`
-	CSVFile   string `json:"csv_file"`
+	URL            string `json:"url"`
+	User           string `json:"user"`
+	Password       string `json:"password"`
+	IndexName      string `json:"index_name"`
+	Size           int    `json:"size"`
+	CSVFile        string `json:"csv_file"`
+	TimestampField string `json:"timestamp_field"`
 }
 
 func main() {
 	// Define flags with both long and short forms
 	var (
-		url           = flag.String("url", "", "OpenSearch URL (short form: -u)")
-		urlShort      = flag.String("u", "", "OpenSearch URL (short form of -url)")
-		user          = flag.String("user", "", "OpenSearch User (short form: -U)")
-		userShort     = flag.String("U", "", "OpenSearch User (short form of -user)")
-		password      = flag.String("password", "", "OpenSearch Password (short form: -p)")
-		passwordShort = flag.String("p", "", "OpenSearch Password (short form of -password)")
-		indexName     = flag.String("index", "", "Index Name (short form: -i)")
-		indexShort    = flag.String("i", "", "Index Name (short form of -index)")
-		size          = flag.Int("size", 0, "Size limit for the number of documents to fetch (short form: -s)")
-		sizeShort     = flag.Int("s", 10, "Size limit for the number of documents to fetch (short form: -s)")
-		configFile    = flag.String("config", "", "Config file path (short form: -c)")
-		configShort   = flag.String("c", "", "Config file path (short form of -config)")
-		csvFile       = flag.String("csv", "", "CSV output file (short form: -o)")
-		csvShort      = flag.String("o", "", "CSV output file (short form of -csv)")
+		url            = flag.String("url", "", "OpenSearch URL (short form: -u)")
+		urlShort       = flag.String("u", "", "OpenSearch URL (short form of -url)")
+		user           = flag.String("user", "", "OpenSearch User (short form: -U)")
+		userShort      = flag.String("U", "", "OpenSearch User (short form of -user)")
+		password       = flag.String("password", "", "OpenSearch Password (short form: -p)")
+		passwordShort  = flag.String("p", "", "OpenSearch Password (short form of -password)")
+		indexName      = flag.String("index", "", "Index Name (short form: -i)")
+		indexShort     = flag.String("i", "", "Index Name (short form of -index)")
+		size           = flag.Int("size", 0, "Size limit for the number of documents to fetch (short form: -s)")
+		sizeShort      = flag.Int("s", 10, "Size limit for the number of documents to fetch (short form: -s)")
+		configFile     = flag.String("config", "", "Config file path (short form: -c)")
+		configShort    = flag.String("c", "", "Config file path (short form of -config)")
+		csvFile        = flag.String("csv", "", "CSV output file (short form: -o)")
+		csvShort       = flag.String("o", "", "CSV output file (short form of -csv)")
+		timestampField = flag.String("timestamp", "@timestamp", "Timestamp field name (short form: -t)")
+		timestampShort = flag.String("t", "@timestamp", "Timestamp field name (short form of -timestamp)")
 	)
 	// Override the default flag.Usage
 	flag.Usage = Usage
@@ -61,6 +64,9 @@ func main() {
 	if *csvFile == "" {
 		csvFile = csvShort
 	}
+	if *timestampField == "@timestamp" {
+		timestampField = timestampShort
+	}
 
 	// Load config from file if provided
 	var config Config
@@ -77,12 +83,13 @@ func main() {
 		}
 	} else {
 		config = Config{
-			URL:       *url,
-			User:      *user,
-			Password:  *password,
-			IndexName: *indexName,
-			Size:      *size,
-			CSVFile:   *csvFile,
+			URL:            *url,
+			User:           *user,
+			Password:       *password,
+			IndexName:      *indexName,
+			Size:           *size,
+			CSVFile:        *csvFile,
+			TimestampField: *timestampField,
 		}
 	}
 

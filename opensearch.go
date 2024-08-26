@@ -37,8 +37,19 @@ func FetchData(config Config) {
 		"query": map[string]interface{}{
 			"match_all": map[string]interface{}{},
 		},
+		"sort": []map[string]interface{}{
+			{
+				config.TimestampField: map[string]interface{}{
+					"order":         "desc",
+					"unmapped_type": "date",
+				},
+			},
+		},
 	}
 	b, _ := json.Marshal(query)
+
+	// DEBUG:
+	// fmt.Printf("Generated Query: %s\n", string(b))
 
 	res, err := client.Search(
 		client.Search.WithContext(context.Background()),
@@ -52,21 +63,53 @@ func FetchData(config Config) {
 	}
 	defer res.Body.Close()
 
+	// DEBUG:
+	// if res.StatusCode != 200 {
+	// 	fmt.Printf("Unexpected status code: %d\n", res.StatusCode)
+	// 	bodyBytes, _ := io.ReadAll(res.Body)
+	// 	fmt.Printf("Response: %s\n", string(bodyBytes))
+	// 	return
+	// }
+
 	var r map[string]interface{}
 	if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
 		fmt.Printf("Error parsing the response body: %s\n", err)
 		return
 	}
 
-	hits := r["hits"].(map[string]interface{})["hits"].([]interface{})
-	if len(hits) == 0 {
+	// Check if "hits" exist in the response
+	hitsRaw, ok := r["hits"]
+	if !ok {
+		fmt.Println("No hits found in the response.")
+		return
+	}
+
+	hitsMap, ok := hitsRaw.(map[string]interface{})
+	if !ok {
+		fmt.Println("Error: Unexpected format for hits.")
+		return
+	}
+
+	hits, ok := hitsMap["hits"].([]interface{})
+	if !ok || len(hits) == 0 {
 		fmt.Println("No data found.")
 		return
 	}
 
-	firstHitSource := hits[0].(map[string]interface{})["_source"].(map[string]interface{})
-	headers := make([]string, 0, len(firstHitSource))
-	for field := range firstHitSource {
+	firstHit, ok := hits[0].(map[string]interface{})
+	if !ok {
+		fmt.Println("Error: Unexpected format for hit.")
+		return
+	}
+
+	source, ok := firstHit["_source"].(map[string]interface{})
+	if !ok {
+		fmt.Println("Error: Unexpected format for _source.")
+		return
+	}
+
+	headers := make([]string, 0, len(source))
+	for field := range source {
 		headers = append(headers, field)
 	}
 
@@ -78,7 +121,11 @@ func FetchData(config Config) {
 		go func(hit interface{}) {
 			defer wg.Done()
 			row := make([]string, len(headers))
-			doc := hit.(map[string]interface{})["_source"].(map[string]interface{})
+			doc, ok := hit.(map[string]interface{})["_source"].(map[string]interface{})
+			if !ok {
+				fmt.Println("Error: Unexpected format for document source.")
+				return
+			}
 			for i, header := range headers {
 				if value, ok := doc[header]; ok {
 					row[i] = fmt.Sprintf("%v", value)
