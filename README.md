@@ -1,6 +1,6 @@
 # OSearchTableView
 
-OSearchTableView is a command-line tool written in Go for fetching and displaying data from OpenSearch indices in a tabular text format or CSV.
+OSearchTableView is a command-line tool for fetching and displaying data from OpenSearch indices in a tabular text format or export to a CSV file.
 
 ## Table of Contents
 
